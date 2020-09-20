@@ -1,2 +1,2 @@
-# TampermonkeyScripts
-Collection of useful Tampermonkey scripts
+# userscripts
+Collection of useful userscripts
