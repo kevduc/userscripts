@@ -66,7 +66,7 @@
       window.setTimeout(getVoices, 500);
       return;
     }
-    chosenVoice = voices.find((voice) => voice.name === "Google US English");
+    chosenVoice = voices.find((voice) => voice.name === "Google US English"); // my personal preference, even tho the coach's avatar is a man
     if (!chosenVoice) chosenVoice = voices.find((voice) => voice.lang === "en-US" && voice.name.includes("Male"));
     if (!chosenVoice) chosenVoice = voices.find((voice) => voice.lang === "en-US");
     if (!chosenVoice) chosenVoice = voices.find((voice) => voice.lang.startsWith("en-"));
