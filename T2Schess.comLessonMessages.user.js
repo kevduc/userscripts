@@ -5,8 +5,8 @@
 // @author       KevDuc
 // @namespace    https://kevduc.github.io/
 // @homepageURL  https://github.com/kevduc/userscripts
-// @downloadURL  https://raw.githubusercontent.com/kevduc/userscripts/master/T2Schess.comLessonMessages.user.js
-// @updateURL    https://raw.githubusercontent.com/kevduc/userscripts/master/T2Schess.comLessonMessages.user.js
+// @downloadURL  https://github.com/kevduc/userscripts/raw/master/T2Schess.comLessonMessages.user.js
+// @updateURL    https://github.com/kevduc/userscripts/raw/master/T2Schess.comLessonMessages.user.js
 // @supportURL   https://github.com/kevduc/userscripts/issues
 // @include      https://www.chess.com/lessons/*
 // @grant        none
