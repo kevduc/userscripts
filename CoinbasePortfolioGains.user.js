@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Coinbase Portfolio Gains
-// @version      1.0
+// @version      1.1
 // @description  Shows Coinbase portfolio gains
 // @author       KevDuc
 // @namespace    https://kevduc.github.io/
@@ -31,12 +31,20 @@
 
     // -------------------------
 
-    let invested = localStorage.getItem('invested');
+    let totalInvestmentHistory = JSON.parse(localStorage.getItem('totalInvestmentHistory'));
 
-    if (invested === null || totalInvestment !== 0 && invested !== totalInvestment) {
-        invested = totalInvestment;
-        localStorage.setItem('invested', invested);
+    // No previous investment
+    if (totalInvestmentHistory === null) totalInvestmentHistory = [];
+
+    const previousTotalInvestment = totalInvestmentHistory[0];
+
+    // totalInvestment value changed
+    if (totalInvestment !== 0 && totalInvestment !== previousTotalInvestment) {
+        totalInvestmentHistory.unshift(totalInvestment);
+        localStorage.setItem('totalInvestmentHistory', JSON.stringify(totalInvestmentHistory));
     }
+
+    const invested = totalInvestmentHistory[0] || 0;
 
     function updateROI(balance, roi) {
         const value = parseFloat(balance.innerText.replace(/[$€£,]/g,''));
