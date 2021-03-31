@@ -1,0 +1,27 @@
+{
+  "name": "userscripts",
+  "version": "1.0.0",
+  "description": "Collection of useful userscripts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevduc/userscripts.git"
+  },
+  "keywords": [
+    "userscripts",
+    "tampermonkey",
+    "javascript",
+    "tampermonkey-script",
+    "tampermonkey-userscript",
+    "tampermonkey-user-script",
+    "tampermonkeyscript",
+    "tampermonkey-scripts",
+    "tampermonkey-javascript-userscripts",
+    "tampermonkeyscripts"
+  ],
+  "author": "kevduc",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kevduc/userscripts/issues"
+  },
+  "homepage": "https://github.com/kevduc/userscripts#readme"
+}
