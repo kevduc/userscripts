@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AddYouTubeShortcuts
-// @version      1.0
+// @version      1.0.2
 // @description  Add YouTube keyboard shortcuts to any video
 // @author       kevduc
 // @namespace    https://kevduc.github.io/
@@ -16,14 +16,14 @@
 (function() {
     'use strict';
 
-    const stack = document.createElement('div');
-    stack.style = `
+    const notificationStack = document.createElement('div');
+    notificationStack.style = `
         position: fixed;
         bottom: 0;
         right: 0;
         padding: 0.5rem;
     `;
-    document.body.appendChild(stack);
+    document.body.appendChild(notificationStack);
 
     const notify = (message, timeout) => {
         const transitionDelay = 500;
@@ -44,7 +44,7 @@
             text-align: center;
         `;
         div.innerText = message;
-        stack.appendChild(div);
+        notificationStack.appendChild(div);
         setTimeout(() => {
             div.style.opacity = "0";
             setTimeout(() => div.remove(), transitionDelay);
@@ -56,17 +56,17 @@
         const parent = element.parentElement;
         if (parent === null) return null;
         const sibling = parent.querySelector(query);
-        if (sibling != null) return sibling;
+        if (sibling !== null) return sibling;
         return closestSibling(parent, query);
     }
 
     document.addEventListener("keydown", (e) => {
         const video = closestSibling(document.activeElement, "video");
-        const notifySpeed = () => notify(`${video.playbackRate}x`, 1500)
+        const notifySpeed = (speed) => notify(`${speed}x`, 1500)
 
         switch(e.key) {
-            case ">": { video.playbackRate += 0.25; notifySpeed(); break; }
-            case "<": { video.playbackRate -= 0.25; notifySpeed(); break; }
+            case ">": { const newRate = video.playbackRate += 0.25; notifySpeed(newRate); break; }
+            case "<": { const newRate = video.playbackRate -= 0.25; notifySpeed(newRate); break; }
             default: break;
         }
 
