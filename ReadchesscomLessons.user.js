@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         T2S chess.com lesson messages
+// @name         Read chess.com lesson messages
 // @version      1.0
-// @description  Add T2S to chess.com messages in lessons
+// @description  Add text-to-speech to chess.com messages in lessons
 // @author       KevDuc
 // @namespace    https://kevduc.github.io/
 // @homepageURL  https://github.com/kevduc/userscripts
