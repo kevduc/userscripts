@@ -12,24 +12,25 @@
 // @exclude      https://www.youtube.com/*
 // @grant        none
 // @run-at       document-end
+// @icon         https://www.google.com/s2/favicons?sz=128&domain=youtube.com
 // ==/UserScript==
 
-(function() {
-    'use strict';
+;(function () {
+  'use strict'
 
-    const notificationStack = document.createElement('div');
-    notificationStack.style = `
+  const notificationStack = document.createElement('div')
+  notificationStack.style = `
         position: fixed;
         bottom: 0;
         right: 0;
         padding: 0.5rem;
-    `;
-    document.body.appendChild(notificationStack);
+    `
+  document.body.appendChild(notificationStack)
 
-    const notify = (message, timeout) => {
-        const transitionDelay = 500;
-        const div = document.createElement('div');
-        div.style = `
+  const notify = (message, timeout) => {
+    const transitionDelay = 500
+    const div = document.createElement('div')
+    div.style = `
             background-color: #222;
             border: 2px solid #ddd;
             padding: 0.5rem;
@@ -43,33 +44,40 @@
             opacity: 1;
             transition: opacity ${transitionDelay}ms ease-in;
             text-align: center;
-        `;
-        div.innerText = message;
-        notificationStack.appendChild(div);
-        setTimeout(() => {
-            div.style.opacity = "0";
-            setTimeout(() => div.remove(), transitionDelay);
-        }, timeout);
+        `
+    div.innerText = message
+    notificationStack.appendChild(div)
+    setTimeout(() => {
+      div.style.opacity = '0'
+      setTimeout(() => div.remove(), transitionDelay)
+    }, timeout)
+  }
+
+  const closestSibling = (element, query) => {
+    const parent = element.parentElement
+    if (parent === null) return null
+    const sibling = parent.querySelector(query)
+    if (sibling !== null) return sibling
+    return closestSibling(parent, query)
+  }
+
+  document.addEventListener('keydown', (e) => {
+    const video = closestSibling(document.activeElement, 'video')
+    const notifySpeed = (speed) => notify(`${speed}x`, 1500)
+
+    switch (e.key) {
+      case '>': {
+        const newRate = (video.playbackRate += 0.25)
+        notifySpeed(newRate)
+        break
+      }
+      case '<': {
+        const newRate = (video.playbackRate -= 0.25)
+        notifySpeed(newRate)
+        break
+      }
+      default:
+        break
     }
-
-
-    const closestSibling = (element, query) => {
-        const parent = element.parentElement;
-        if (parent === null) return null;
-        const sibling = parent.querySelector(query);
-        if (sibling !== null) return sibling;
-        return closestSibling(parent, query);
-    }
-
-    document.addEventListener("keydown", (e) => {
-        const video = closestSibling(document.activeElement, "video");
-        const notifySpeed = (speed) => notify(`${speed}x`, 1500)
-
-        switch(e.key) {
-            case ">": { const newRate = video.playbackRate += 0.25; notifySpeed(newRate); break; }
-            case "<": { const newRate = video.playbackRate -= 0.25; notifySpeed(newRate); break; }
-            default: break;
-        }
-
-    })
-})();
+  })
+})()

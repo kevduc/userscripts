@@ -11,6 +11,7 @@
 // @match        https://www.coinbase.com/*
 // @grant        none
 // @run-at       document-end
+// @icon         https://www.google.com/s2/favicons?sz=128&domain=coinbase.com
 // ==/UserScript==
 
 ;(function () {
