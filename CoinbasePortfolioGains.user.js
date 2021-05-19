@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Coinbase Portfolio Gains
-// @version      1.2.1
+// @version      1.3.0
 // @description  Shows Coinbase portfolio gains
 // @author       kevduc
 // @namespace    https://kevduc.github.io/
@@ -19,7 +19,14 @@
 
   // User editable
 
-  const totalInvestment = 0 // Change this to the total amount you invested (in your local currency)
+  const totalInvestment = 1234.56 // Change this to the total amount you invested (in your local currency)
+
+  /**
+   * gainsPosition is one of:
+   * - "centered": gains will be shown above the graph, horizontally centered
+   * - "near-balance": gains will be shown above the graph, next to the total balance (used by default if gainsPosition value is invalid)
+   */
+  const gainsPosition = 'centered' // Change this to the position you prefer
 
   // ----------------------------------------------------
   // ----------------- Helper functions -----------------
@@ -160,13 +167,24 @@
     profitElement.innerText = `${formatProfitPercent(profitPercent)} (${formatProfit(profit)})`
   }
 
-  const createProfitElement = (balanceElement) => {
+  const createProfitElementFrom = async (balanceElement, position) => {
     const profitElement = document.createElement('h2')
     profitElement.className = balanceElement.className
-    profitElement.style = `display:inline-block; font-size:20px`
+    profitElement.style = `display:inline-block; font-size:20px;`
 
-    balanceElement.style.display = 'inline-block'
-    balanceElement.insertAdjacentElement('afterend', profitElement)
+    switch (position) {
+      case 'centered': {
+        const balanceContainer = await document.querySelectorWhenLoaded('[class*="Balance__Container"]')
+        balanceContainer.insertAdjacentElement('afterend', profitElement)
+        break
+      }
+      default:
+      case 'near-balance': {
+        balanceElement.style.display = 'inline-block'
+        balanceElement.insertAdjacentElement('afterend', profitElement)
+        break
+      }
+    }
 
     return profitElement
   }
@@ -181,7 +199,7 @@
 
     updateBalanceCurrencyTemplate(balanceElement)
 
-    const profitElement = createProfitElement(balanceElement)
+    const profitElement = await createProfitElementFrom(balanceElement, gainsPosition)
 
     const update = () => updateProfit(profitElement, getBalanceValue(balanceElement))
     const observer = new MutationObserver(update)
