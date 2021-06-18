@@ -1,6 +1,6 @@
 # userscripts
 
-Collection of useful userscripts.
+🐵 Collection of useful userscripts.
 
 Click to install:
 
