@@ -2,9 +2,11 @@
 
 Collection of useful userscripts.
 
-🐵 First install the [Tampermonkey Chrome extension](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+🐵 First install Tampermonkey:
+- [Chrome extension](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+- [Firefox extension](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
 
-📜 Then click a script name to install it:
+📜 Then click a script to install it:
 
 - **[`AddYouTubeShortcuts.user.js`](https://github.com/kevduc/userscripts/raw/master/AddYouTubeShortcuts.user.js)** - For any website, adds [YouTube keyboard shortcuts](https://support.google.com/youtube/answer/7631406) to control videos (e.g. '>' to speed up a video).  
   **Note:** only supports speed control for now, create an issue if you need support for more shortcuts.
