@@ -9,7 +9,6 @@
 // @updateURL    https://raw.githubusercontent.com/kevduc/userscripts/master/AddYouTubeShortcuts.user.js
 // @supportURL   https://github.com/kevduc/userscripts/issues
 // @include      *
-// @exclude      https://www.youtube.com/*
 // @grant        none
 // @run-at       document-end
 // @icon         https://www.google.com/s2/favicons?sz=128&domain=youtube.com
