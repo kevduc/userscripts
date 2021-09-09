@@ -23,10 +23,10 @@
 
   /**
    * gainsPosition is one of:
-   * - "centered": gains will be shown above the graph, horizontally centered
-   * - "near-balance": gains will be shown above the graph, next to the total balance (used by default if gainsPosition value is invalid)
+   * - 'centered': gains will be shown above the graph, horizontally centered
+   * - 'near-balance': gains will be shown above the graph, next to the total balance (used by default if gainsPosition value is invalid)
    */
-  const gainsPosition = 'centered' // Change this to the position you prefer
+  const gainsPosition = 'centered' // Change this to the position you prefer ('centered', 'near-balance')
 
   // ----------------------------------------------------
   // ----------------- Helper functions -----------------
