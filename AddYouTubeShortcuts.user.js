@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AddYouTubeShortcuts
-// @version      1.0.2
+// @version      1.0.3
 // @description  Add YouTube keyboard shortcuts to any video
 // @author       kevduc
 // @namespace    https://kevduc.github.io/
