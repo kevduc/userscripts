@@ -16,8 +16,10 @@
 
 ;(function () {
   'use strict'
-
-  // User editable
+  
+  // ----------------------------------------------------
+  // ----------------- User Parameters ------------------
+  // ----------------------------------------------------
 
   const totalInvestment = 1234.56 // Change this to the total amount you invested (in your local currency)
 
