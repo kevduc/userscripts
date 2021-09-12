@@ -9,6 +9,8 @@
 // @updateURL    https://raw.githubusercontent.com/kevduc/userscripts/master/AddYouTubeShortcuts.user.js
 // @supportURL   https://github.com/kevduc/userscripts/issues
 // @include      *
+// @exclude      https://www.youtube.com/*
+// remove the line above if you want to run the script on YouTube
 // @grant        none
 // @run-at       document-end
 // @icon         https://www.google.com/s2/favicons?sz=128&domain=youtube.com
@@ -62,6 +64,7 @@
 
   document.addEventListener('keydown', (e) => {
     const video = closestSibling(document.activeElement, 'video')
+    if (video === null) return
     const notifySpeed = (speed) => notify(`${speed}x`, 1500)
 
     switch (e.key) {
