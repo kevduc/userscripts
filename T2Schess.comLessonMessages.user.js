@@ -2,7 +2,7 @@
 // @name         Read chess.com lesson messages
 // @version      1.0
 // @description  Add text-to-speech to chess.com messages in lessons
-// @author       KevDuc
+// @author       kevduc
 // @namespace    https://kevduc.github.io/
 // @homepageURL  https://github.com/kevduc/userscripts
 // @downloadURL  https://github.com/kevduc/userscripts/raw/master/T2Schess.comLessonMessages.user.js

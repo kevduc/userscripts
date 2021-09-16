@@ -2,7 +2,7 @@
 // @name         NetflixVideoSpeedControl
 // @version      1.0
 // @description  Add speed control to Netflix
-// @author       KevDuc
+// @author       kevduc
 // @namespace    https://kevduc.github.io/
 // @homepageURL  https://github.com/kevduc/userscripts
 // @downloadURL  https://raw.githubusercontent.com/kevduc/userscripts/master/NetflixVideoSpeedControl.user.js
