@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Coinbase Portfolio Gains
-// @version      1.3.1
+// @version      1.4.0
 // @description  Shows Coinbase portfolio gains
 // @author       kevduc
 // @namespace    https://kevduc.github.io/
@@ -14,8 +14,8 @@
 // @icon         https://www.google.com/s2/favicons?sz=128&domain=coinbase.com
 // ==/UserScript==
 
-;(function () {
-  'use strict'
+;(async function () {
+  ;('use strict')
 
   // ----------------------------------------------------
   // ----------------- User Parameters ------------------
@@ -123,9 +123,13 @@
     }
   }
 
+  // Create/retrieve the investment history
   const totalInvestmentHistory = TotalInvestmentHistory.getInstance()
+
+  // Update the history with the current investment value (user parameter specified at the top of this script)
   totalInvestmentHistory.update(totalInvestment)
 
+  // Use the latest investment value (or 0 if none) for the profit calculation
   const invested = totalInvestmentHistory.latest() || 0
 
   // ----------------------------------------------------
@@ -143,7 +147,7 @@
 
   const getBalanceValue = (balanceElement) => {
     const balanceValueStr = getBalanceValueStr(balanceElement)
-    const balanceValue = parseLocaleFloat(balanceValueStr) // undefined locale means use computer default
+    const balanceValue = parseLocaleFloat(balanceValueStr) // Not specifying locale (second argument) means we use the computer's default language
     if (isNaN(balanceValue)) throw new Error(`Cannot parse balance value "${balanceValueStr}" to a float.`)
     return balanceValue
   }
@@ -160,7 +164,7 @@
 
   const formatProfit = (profit) =>
     `${profit > 0 ? '' : '-'}${applyBalanceCurrencyTemplate(
-      // undefined locale means use computer default
+      // Using undefined for locale (first argument) means we use the computer's default language
       Math.abs(profit).toLocaleString(undefined, {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
@@ -220,12 +224,20 @@
 
     const profitElement = createProfitElementFrom(balanceElement, gainsPosition)
 
+    // Update the profit when hovering over the chart area to match portfolio value
     const update = () => updateProfit(profitElement, getBalanceValue(balanceElement))
     const observer = new MutationObserver(update)
     observer.observe(balanceTextNode, { characterData: true })
 
     update()
   }
+
+  // Re-create the profit when switching from Home to Portfolio page and vice versa
+  const contentObserver = new MutationObserver(() => init())
+  const content = await document.querySelectorWhenLoaded(
+    `${coinbaseClassQuery('LayoutDesktop__StyledContent')}  ${activeTransitionerQuery}`
+  )
+  contentObserver.observe(content, { childList: true })
 
   init()
 })()
