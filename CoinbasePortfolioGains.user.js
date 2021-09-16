@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Coinbase Portfolio Gains
-// @version      1.3.0
+// @version      1.3.1
 // @description  Shows Coinbase portfolio gains
 // @author       kevduc
 // @namespace    https://kevduc.github.io/
@@ -16,12 +16,12 @@
 
 ;(function () {
   'use strict'
-  
+
   // ----------------------------------------------------
   // ----------------- User Parameters ------------------
   // ----------------------------------------------------
 
-  const totalInvestment = 1234.56 // Change this to the total amount you invested (in your local currency)
+  const totalInvestment = 0 // Change this to the total amount you invested (in your local currency)
 
   /**
    * gainsPosition is one of:
@@ -40,11 +40,19 @@
 
   const waitForTruthy = async (func, milli = 200) => {
     let result
-    while (!(result = func())) await pause(milli)
+    while (!(result = await Promise.resolve(func()))) await pause(milli)
     return result
   }
 
-  document.querySelectorWhenLoaded = async (query) => await waitForTruthy(() => document.querySelector(query))
+  Document.prototype.querySelectorWhenLoaded = Element.prototype.querySelectorWhenLoaded = async function (query) {
+    return await waitForTruthy(() => this.querySelector(query))
+  }
+
+  // Queries
+
+  const coinbaseClassQuery = (className) => `[class*="${className}"]`
+  const loadedActiveQuery = '[data-element-handle="step-loaded-active"]'
+  const activeTransitionerQuery = `${coinbaseClassQuery('Transitioner__Container')} ${loadedActiveQuery}`
 
   // Local Storage
 
@@ -169,14 +177,14 @@
     profitElement.innerText = `${formatProfitPercent(profitPercent)} (${formatProfit(profit)})`
   }
 
-  const createProfitElementFrom = async (balanceElement, position) => {
+  const createProfitElementFrom = (balanceElement, position) => {
     const profitElement = document.createElement('h2')
     profitElement.className = balanceElement.className
     profitElement.style = `display:inline-block; font-size:20px;`
 
     switch (position) {
       case 'centered': {
-        const balanceContainer = await document.querySelectorWhenLoaded('[class*="Balance__Container"]')
+        const balanceContainer = balanceElement.closest(coinbaseClassQuery('Balance__Container'))
         balanceContainer.insertAdjacentElement('afterend', profitElement)
         break
       }
@@ -196,12 +204,21 @@
   // ----------------------------------------------------
 
   async function init() {
-    const balanceElement = await document.querySelectorWhenLoaded('h1[class*="Balance__BalanceHeader"]')
-    const balanceTextNode = balanceElement.firstChild
+    const chartSection = await waitForTruthy(
+      () =>
+        document.querySelector(`${coinbaseClassQuery('DashboardContent__PortfolioChartSection')} ${activeTransitionerQuery}`) ||
+        document.querySelector(`${coinbaseClassQuery('PortfolioContent__PortfolioChartContainer')} ${activeTransitionerQuery}`)
+    )
+
+    let balanceElement
+    const balanceTextNode = await waitForTruthy(async () => {
+      balanceElement = await chartSection.querySelectorWhenLoaded(coinbaseClassQuery('Balance__BalanceHeader'))
+      return balanceElement.firstChild // Makes sure the text node exists inside balanceElement
+    })
 
     updateBalanceCurrencyTemplate(balanceElement)
 
-    const profitElement = await createProfitElementFrom(balanceElement, gainsPosition)
+    const profitElement = createProfitElementFrom(balanceElement, gainsPosition)
 
     const update = () => updateProfit(profitElement, getBalanceValue(balanceElement))
     const observer = new MutationObserver(update)
