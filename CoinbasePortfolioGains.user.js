@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Coinbase Portfolio Gains
-// @version      1.4.0
+// @version      1.4.1
 // @description  Shows Coinbase portfolio gains
 // @author       kevduc
 // @namespace    https://kevduc.github.io/
@@ -53,6 +53,7 @@
   const coinbaseClassQuery = (className) => `[class*="${className}"]`
   const loadedActiveQuery = '[data-element-handle="step-loaded-active"]'
   const activeTransitionerQuery = `${coinbaseClassQuery('Transitioner__Container')} ${loadedActiveQuery}`
+  const profitId = 'tampermonkey-profit'
 
   // Local Storage
 
@@ -183,6 +184,7 @@
 
   const createProfitElementFrom = (balanceElement, position) => {
     const profitElement = document.createElement('h2')
+    profitElement.id = profitId
     profitElement.className = balanceElement.className
     profitElement.style = `display:inline-block; font-size:20px;`
 
@@ -213,6 +215,8 @@
         document.querySelector(`${coinbaseClassQuery('DashboardContent__PortfolioChartSection')} ${activeTransitionerQuery}`) ||
         document.querySelector(`${coinbaseClassQuery('PortfolioContent__PortfolioChartContainer')} ${activeTransitionerQuery}`)
     )
+
+    if (document.querySelector(`#${profitId}`) !== null) return
 
     let balanceElement
     const balanceTextNode = await waitForTruthy(async () => {
