@@ -5,6 +5,7 @@ Collection of useful userscripts.
 🐵 First install Tampermonkey:
 - [Chrome extension](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
 - [Firefox extension](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
+- [Other browsers](https://www.tampermonkey.net/index.php?ext=dhdg)
 
 📜 Then click a script to install it:
 
