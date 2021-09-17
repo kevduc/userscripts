@@ -51,6 +51,7 @@
   // Queries
 
   const coinbaseClassQuery = (className) => `[class*="${className}"]`
+  const loadedQuery = '[data-element-handle*="step-loaded"]'
   const loadedActiveQuery = '[data-element-handle="step-loaded-active"]'
   const activeTransitionerQuery = `${coinbaseClassQuery('Transitioner__Container')} ${loadedActiveQuery}`
   const profitId = 'tampermonkey-profit'
@@ -209,39 +210,51 @@
   // -------------------- Initialize --------------------
   // ----------------------------------------------------
 
-  async function init() {
-    const chartSection = await waitForTruthy(
-      () =>
-        document.querySelector(`${coinbaseClassQuery('DashboardContent__PortfolioChartSection')} ${activeTransitionerQuery}`) ||
-        document.querySelector(`${coinbaseClassQuery('PortfolioContent__PortfolioChartContainer')} ${activeTransitionerQuery}`)
-    )
+  function initialize() {
+    const chartSection =
+      document.querySelector(`${coinbaseClassQuery('DashboardContent__PortfolioChartSection')} ${activeTransitionerQuery}`) ||
+      document.querySelector(`${coinbaseClassQuery('PortfolioContent__PortfolioChartContainer')} ${activeTransitionerQuery}`)
+    if (chartSection === null) return
 
-    if (document.querySelector(`#${profitId}`) !== null) return
+    let balanceElement = chartSection.querySelector(coinbaseClassQuery('Balance__BalanceHeader'))
+    if (balanceElement === null) return
 
-    let balanceElement
-    const balanceTextNode = await waitForTruthy(async () => {
-      balanceElement = await chartSection.querySelectorWhenLoaded(coinbaseClassQuery('Balance__BalanceHeader'))
-      return balanceElement.firstChild // Makes sure the text node exists inside balanceElement
-    })
+    const balanceTextNode = balanceElement.firstChild
+    if (balanceTextNode === null) return
+
+    if (document.querySelector(`#${profitId}`) !== null) return // profit element already exists
+    const profitElement = createProfitElementFrom(balanceElement, gainsPosition)
 
     updateBalanceCurrencyTemplate(balanceElement)
 
-    const profitElement = createProfitElementFrom(balanceElement, gainsPosition)
-
-    // Update the profit when hovering over the chart area to match portfolio value
+    // Update the profit when hovering over the chart area to match portfolio value.
+    /* Note: No need to call disconnect() for previously created MutationObserver objects because:
+     * https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver/disconnect#usage_notes
+     * "If the element being observed is removed from the DOM, and then subsequently released by the browser's
+     *  garbage collection mechanism, the MutationObserver is likewise deleted." */
     const update = () => updateProfit(profitElement, getBalanceValue(balanceElement))
-    const observer = new MutationObserver(update)
-    observer.observe(balanceTextNode, { characterData: true })
+    const balanceObserver = new MutationObserver(update)
+    balanceObserver.observe(balanceTextNode, { characterData: true })
 
     update()
   }
 
-  // Re-create the profit when switching from Home to Portfolio page and vice versa
-  const contentObserver = new MutationObserver(() => init())
+  // Getting the title element
+  const title = await document.querySelectorWhenLoaded(coinbaseClassQuery('HeaderBarDesktop__Title')) // or '#layout-title'
+
+  // Try to re-create the profit element if needed when the page content changes
+  const contentObserver = new MutationObserver(() => {
+    if (/Home|Portfolio/.test(title.innerText))
+      // Only adding the profit element to the Home and Portfolio pages
+      initialize()
+  })
+
   const content = await document.querySelectorWhenLoaded(
     `${coinbaseClassQuery('LayoutDesktop__StyledContent')}  ${activeTransitionerQuery}`
   )
-  contentObserver.observe(content, { childList: true })
 
-  init()
+  // Watch the page content for any tree modification (=> potentially need to re-add the profit element if switching to Home or Portfolio main pages)
+  contentObserver.observe(content, { childList: true, subtree: true })
+
+  initialize()
 })()
