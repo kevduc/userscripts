@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Coinbase Portfolio Gains
-// @version      1.4.1
+// @version      1.4.2
 // @description  Shows Coinbase portfolio gains
 // @author       kevduc
 // @namespace    https://kevduc.github.io/
