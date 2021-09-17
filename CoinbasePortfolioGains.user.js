@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Coinbase Portfolio Gains
-// @version      1.4.2
+// @version      1.4.3
 // @description  Shows Coinbase portfolio gains
 // @author       kevduc
 // @namespace    https://kevduc.github.io/
@@ -233,27 +233,20 @@
      * "If the element being observed is removed from the DOM, and then subsequently released by the browser's
      *  garbage collection mechanism, the MutationObserver is likewise deleted." */
     const update = () => updateProfit(profitElement, getBalanceValue(balanceElement))
-    const balanceObserver = new MutationObserver(update)
+    const balanceObserver = new MutationObserver(() => update())
     balanceObserver.observe(balanceTextNode, { characterData: true })
 
     update()
   }
 
-  // Getting the title element
-  const title = await document.querySelectorWhenLoaded(coinbaseClassQuery('HeaderBarDesktop__Title')) // or '#layout-title'
-
-  // Try to re-create the profit element if needed when the page content changes
-  const contentObserver = new MutationObserver(() => {
-    if (/Home|Portfolio/.test(title.innerText))
-      // Only adding the profit element to the Home and Portfolio pages
-      initialize()
-  })
+  // Try to re-initialize the profit element if needed when the page content changes
+  const contentObserver = new MutationObserver(() => initialize())
 
   const content = await document.querySelectorWhenLoaded(
     `${coinbaseClassQuery('LayoutDesktop__StyledContent')}  ${activeTransitionerQuery}`
   )
 
-  // Watch the page content for any tree modification (=> potentially need to re-add the profit element if switching to Home or Portfolio main pages)
+  // Watch the page content for any tree modification (=> potentially need to re-initialize the profit element if switching to Home or Portfolio main pages)
   contentObserver.observe(content, { childList: true, subtree: true })
 
   initialize()
